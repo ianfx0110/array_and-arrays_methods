@@ -1,18 +1,18 @@
-// JS object to JSON string
+// JSON to Object
+let jsonData = '{"name":"John","age":25,"country":"Kenya"}';
+let obj = JSON.parse(jsonData);
 
+console.log("Object:", obj);
+console.log("Name:", obj.name);
+
+
+// Object to JSON
 let student = {
-  name: "John",
-  age: 20,
-  course: "Web Development",
+  name: "Ascer",
+  course: "Computer Studies",
+  level: "Form 2"
 };
 
-let jsonData = JSON.stringify(student);
+let jsonStudent = JSON.stringify(student);
 
-console.log(jsonData);
-
-//Converts JSON string → JavaScript object.
-let jsonData1 = '{"name":"John","age":20}';
-
-let obj = JSON.parse(jsonData1);
-
-console.log(obj.name);
+console.log("JSON:", jsonStudent);
