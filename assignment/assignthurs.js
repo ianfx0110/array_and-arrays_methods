@@ -1,40 +1,68 @@
-// ===== Bonus Challenge — Student Class System =====
+// ===============================
+// SIMPLE STUDENT SYSTEM (BEGINNER FRIENDLY)
+// This version uses basic JavaScript + clear comments + browser display
+// ===============================
 
+// Helper function to display output on the webpage
+function display(title, data) {
+  const app = document.getElementById("app");
+
+  const section = document.createElement("div");
+  section.style.marginBottom = "20px";
+
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+
+  const pre = document.createElement("pre");
+  pre.textContent = typeof data === "object"
+    ? JSON.stringify(data, null, 2)
+    : data;
+
+  section.appendChild(heading);
+  section.appendChild(pre);
+  app.appendChild(section);
+}
+
+// ===== STUDENT CLASS =====
+// A class is like a blueprint for creating students
 class Student {
   constructor(id, name, course) {
-    this.id = id;
-    this.name = name;
-    this.course = course;
+    this.id = id; // student ID
+    this.name = name; // student name
+    this.course = course; // course name
+
+    // Get today's date
     this.registered = new Date().toISOString().split("T")[0];
   }
 }
 
+// Set is used to store unique student IDs (no duplicates allowed)
 const studentIDs = new Set();
 
 function registerStudent(id, name, course) {
+  // Check if ID already exists
   if (studentIDs.has(id)) {
-    console.log("Student ID already exists");
-    return null;
+    return "Student ID already exists";
   }
 
+  // Create new student
   const student = new Student(id, name, course);
-  studentIDs.add(id);
 
-  const jsonData = JSON.stringify(student, null, 2);
-  console.log(jsonData);
+  // Save ID
+  studentIDs.add(id);
 
   return student;
 }
 
-// Example
-registerStudent(101, "Kevin", "JavaScript");
+// Test student registration
+display("Student Registration", registerStudent(101, "Kevin", "JavaScript"));
 
-
-// ===== Question 1 — Inventory Matcher =====
-
+// ===== QUESTION 1: Inventory Matcher =====
 function matchInventories(invA, invB) {
+  // Combine both arrays and remove duplicates
   const uniqueItems = new Set([...invA, ...invB]);
 
+  // Check if arrays are exactly the same
   const isIdentical =
     invA.length === invB.length &&
     invA.every((item, index) => item === invB[index]);
@@ -45,42 +73,54 @@ function matchInventories(invA, invB) {
   };
 }
 
+display("Inventory Matcher", matchInventories(["pen", "book"], ["pen", "book"]));
 
-// ===== Question 2 — Score Aggregator =====
-
-function aggregateScores(scoreArray) {
+// ===== QUESTION 2: Score Aggregator =====
+function aggregateScores(scores) {
   const result = {};
-  const unique = new Set(scoreArray.map(String));
 
-  unique.forEach(score => {
-    result[score] = scoreArray.filter(x => String(x) === score).length;
+  // Loop through scores
+  scores.forEach(score => {
+    // Convert to string so keys match
+    const key = String(score);
+
+    // Count occurrences
+    result[key] = (result[key] || 0) + 1;
   });
 
   return result;
 }
 
+display("Score Aggregator", aggregateScores([10, 20, 10, 30, 20]));
 
-// ===== Question 3 — Username Sanitizer =====
-
+// ===== QUESTION 3: Username Sanitizer =====
 function sanitizeUsernames(users) {
   const names = new Set();
 
   users.forEach(user => {
-    let name = user.name.trim();
+    let name = user.name.trim(); // remove spaces
+
+    // Capitalize first letter
     name = name[0].toUpperCase() + name.slice(1);
+
     names.add(name);
   });
 
-  return [...names];
+  return [...names]; // convert Set back to array
 }
 
+display("Username Sanitizer", sanitizeUsernames([
+  { name: "  kevin" },
+  { name: "kevin" },
+  { name: "john" }
+]));
 
-// ===== Question 4 — Tag Filter =====
-
+// ===== QUESTION 4: Tag Filter =====
 function addDefaultTags(posts, newTag) {
   posts.forEach(post => {
     const tagSet = new Set(post.tags);
 
+    // Add tag only if it doesn't exist
     if (!tagSet.has(newTag)) {
       post.tags.push(newTag);
     }
@@ -89,36 +129,39 @@ function addDefaultTags(posts, newTag) {
   return posts;
 }
 
+display("Tag Filter", addDefaultTags([
+  { title: "Post1", tags: ["js"] },
+  { title: "Post2", tags: ["html"] }
+], "web"));
 
-// ===== Question 5 — Config Merger =====
-
+// ===== QUESTION 5: Config Merger =====
 function buildConfig(userConfig) {
   const defaults = { theme: "light", retries: 3 };
 
+  // Use user values or defaults
   const config = {
     theme: userConfig.theme ?? defaults.theme,
     retries: userConfig.retries ?? defaults.retries
   };
 
-  const themeChars = [...new Set(config.theme.split(""))];
+  // Get unique letters from theme
+  const themeCharacters = [...new Set(config.theme.split(""))];
 
   return {
     ...config,
-    themeChars
+    themeCharacters
   };
 }
 
+display("Config Merger", buildConfig({ theme: "dark" }));
 
-// ===== Question 6 — Event Manager (Closure) =====
-
+// ===== QUESTION 6: Event Manager =====
 function createEventManager() {
   const events = [];
-  const uniqueEvents = new Set();
 
   return {
     trigger(eventName) {
       events.push(eventName);
-      uniqueEvents.add(eventName);
     },
 
     getEvents() {
@@ -127,25 +170,29 @@ function createEventManager() {
   };
 }
 
+const manager = createEventManager();
+manager.trigger("click");
+manager.trigger("scroll");
 
-// ===== Question 7 — Array Intersection =====
+display("Event Manager", manager.getEvents());
 
+// ===== QUESTION 7: Array Intersection =====
 function intersectArrays(arr1, arr2) {
   const set1 = new Set(arr1);
 
   return arr2.filter(item => set1.has(item));
 }
 
+display("Array Intersection", intersectArrays([1, 2, 3], [2, 3, 4]));
 
-// ===== Question 8 — Cart Formatter =====
-
+// ===== QUESTION 8: Cart Formatter =====
 function formatCart(cartArray) {
   const prices = new Set();
 
   cartArray.forEach(item => {
     if (typeof item === "string") {
       prices.add(Number(item));
-    } else if (typeof item === "object") {
+    } else {
       prices.add(item.price);
     }
   });
@@ -159,26 +206,36 @@ function formatCart(cartArray) {
   return total;
 }
 
+display("Cart Formatter", formatCart([
+  "10",
+  { price: 20 },
+  "10"
+]));
 
-// ===== Question 9 — Value Swapper =====
-
-function swapCoordinates(pointObj) {
-  const { x, y } = pointObj;
-
-  const swapped = `${y},${x}`;
+// ===== QUESTION 9: Value Swapper =====
+function swapCoordinates(point) {
+  const swapped = `${point.y},${point.x}`;
 
   return [swapped];
 }
 
+display("Value Swapper", swapCoordinates({ x: 5, y: 10 }));
 
-// ===== Question 10 — Role Manager =====
+// ===== QUESTION 10: Role Manager =====
+function updateRoles(user, rolesArray) {
+  rolesArray.forEach(role => user.roles.add(role));
 
-function updateRoles(userObj, rolesArray) {
-  rolesArray.forEach(role => userObj.roles.add(role));
+  // Remove guest role
+  user.roles.delete("guest");
 
-  userObj.roles.delete("guest");
+  const rolesList = [...user.roles];
 
-  const rolesList = [...userObj.roles];
-
-  return `${userObj.name} has ${rolesList.length} roles: ${rolesList.join(", ")}`;
+  return `${user.name} has ${rolesList.length} roles: ${rolesList.join(", ")}`;
 }
+
+const user = {
+  name: "Kevin",
+  roles: new Set(["guest"])
+};
+
+display("Role Manager", updateRoles(user, ["admin", "editor"]));
