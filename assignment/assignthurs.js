@@ -1,8 +1,3 @@
-// ===============================
-// SIMPLE STUDENT SYSTEM (BEGINNER FRIENDLY)
-// This version uses basic JavaScript + clear comments + browser display
-// ===============================
-
 // Helper function to display output on the webpage
 function display(title, data) {
   const app = document.getElementById("app");
